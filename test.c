@@ -24,6 +24,7 @@ void	*ret_str(void *str)
 		static int	n = 1;
 		pthread_mutex_t	mut;
 
+		(void)str;
 		pthread_mutex_init(&mut, NULL);
 		pthread_mutex_lock(&mut);
 		printf("thread created No.%d.\n", n++);
