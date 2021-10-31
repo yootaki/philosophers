@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/31 23:48:42 by yootaki           #+#    #+#             */
+/*   Updated: 2021/10/31 23:48:53 by yootaki          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 /* compile command */
 //gcc main.c -g -fsanitize=address
 
@@ -10,7 +22,7 @@
 
 #include "philosopher.h"
 
-//[./philo 3 600 300 400 2]
+//[$ ./philo 3 600 300 400 2]
 typedef struct s_philo_inf
 {
 	int	philo_num;
@@ -20,8 +32,9 @@ typedef struct s_philo_inf
 	int	end_num_to_finish;
 }t_philo_inf;
 
-void	test_gettimeofday(void);
-void	test_pthread_and_mutex(void);
+typedef struct s_philos
+{
+}t_philos;
 
 bool	is_digit(char *arg)
 {
@@ -38,7 +51,9 @@ bool	is_digit(char *arg)
 			i += 1;
 		}
 		if (!(arg[i] >= '0' && arg[i] <= '9'))
+		{
 			return (false);
+		}
 		i += 1;
 	}
 	return (true);
@@ -56,24 +71,24 @@ bool	validate_args(int num, char **args)
 	while (i <= num)
 	{
 		if (is_digit(args[i]) == false)
+		{
 			return (false);
+		}
 		i += 1;
 	}
 	return (true);
 }
 
-void	create_philosopher_info_struct(t_philo_inf *inf, char **args)
+void	create_philosopher_info_struct(t_philo_inf *inf, int num, char **args)
 {
-	//philo num
 	inf->philo_num = ft_atoi(args[0]);
-	//dead time
 	inf->time_to_die = ft_atoi(args[1]);
-	//eat time
 	inf->time_to_eat = ft_atoi(args[2]);
-	//sleep time
 	inf->time_to_sleep = ft_atoi(args[3]);
-	//[ end eating time ]
-	inf->end_num_to_finish = ft_atoi(args[4]);
+	if (num == 5)
+	{
+		inf->end_num_to_finish = ft_atoi(args[4]);
+	}
 }
 
 int	main(int argc, char **argv)
@@ -81,14 +96,19 @@ int	main(int argc, char **argv)
 	t_philo_inf inf;
 
 	/* ToDo */
-	//引数のチェック
+	//1. 引数のチェック
 	if(validate_args(argc - 1, argv) == false)
+	{
 		return (1);
-	//それぞれのオプションを格納（構造体？）
-	create_philosopher_info_struct(&inf, argv);
-	//哲学者の人数分の構造体を作成＆初期化?
-	//プログラム開始
-	//スレッドの作成？
+	}
+
+	//2. philosopherの情報を格納（構造体？）
+	create_philosopher_info_struct(&inf, argc - 1, argv);
+
+	//3. 哲学者の人数分の構造体を作成＆初期化?
+	
+	//4. プログラム開始
+	//->スレッドの作成？
 	//
 	//=== 今回はモニタを使った解法でやってみる(一旦) ===
 	// フォークを持てるかの確認
@@ -102,10 +122,6 @@ int	main(int argc, char **argv)
 	// --------
 	//
 	//死亡までの時間を監視しておいて超えたら死亡の処理
-	
-	/* Test */
-	test_gettimeofday();
-	test_pthread_and_mutex();
 
 	return (0);
 }

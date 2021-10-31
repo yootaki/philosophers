@@ -4,7 +4,7 @@ NAME = philo
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = main.c ft_atoi.c test.c
+SRCS = main.c ft_atoi.c
 
 OBJS = $(SRCS:.c=.o) $(UTILS:.c=.o)
 
