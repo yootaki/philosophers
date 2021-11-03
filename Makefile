@@ -1,7 +1,7 @@
 
 NAME = philo
 
-CC = gcc
+CC = gcc -pthread #-pthreadはDEADLOCKを表示してくれる
 CFLAGS = -Wall -Wextra -Werror
 
 SRCS = main.c ft_atoi.c
