@@ -1,10 +1,10 @@
 
 NAME = philo
 
-CC = gcc -pthread #-pthreadはDEADLOCKを表示してくれる
+CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = main.c ft_atoi.c
+SRCS = main.c init.c ft_atoi.c
 
 OBJS = $(SRCS:.c=.o) $(UTILS:.c=.o)
 
