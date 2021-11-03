@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 13:16:20 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/03 13:16:21 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/03 15:29:23 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,19 @@ t_philos	*create_philos_struct(int num)
 
 void	init_philos_struct(t_philos *philos, int num)
 {
+	struct timeval	tv;
 	int	i;
 
+	if (gettimeofday(&tv, NULL))
+	{
+		printf("get time error!\n");
+		exit(1);
+	}
 	i = 1;
 	while (i <= num)
 	{
 		philos->id = i;
-		philos->status = THINKING;
+		philos->last_eat_time = tv;
 		philos = philos->left;
 		i += 1;
 	}

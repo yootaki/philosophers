@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 13:16:33 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/03 15:05:27 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/03 15:27:42 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	eat(t_philos *philo)
 	if (gettimeofday(&(philo->last_eat_time), NULL))
 	{
 		printf("get time error!\n");
+		exit(1);
 	}
 	printf("philosopher %d is eating\n", philo->id);
 	usleep(inf.time_to_eat * 1000);

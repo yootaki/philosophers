@@ -6,12 +6,12 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 23:50:30 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/03 14:41:29 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/03 15:34:43 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOSOPHER_H_INCLUDE_
-# define PHILOSOPHER_H_INCLUDE_
+#ifndef PHILOSOPHER_H
+# define PHILOSOPHER_H
 
 # include <stdio.h>
 # include <stdlib.h>
