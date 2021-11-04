@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 23:50:30 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/03 15:34:43 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/04 11:22:27 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@
 # include <pthread.h>
 # include <stdbool.h>
 
+enum status
+{
+	LIVE,
+	DEID
+};
+
 typedef struct s_philo_inf
 {
 	int	philo_num;
@@ -32,9 +38,8 @@ typedef struct s_philo_inf
 
 typedef struct s_philos
 {
-	struct s_philos	*left;
-	struct s_philos	*right;
 	int				id;
+	enum status		status;
 	struct timeval	last_eat_time;
 }t_philos;
 

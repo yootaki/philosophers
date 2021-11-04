@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 13:16:20 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/03 15:29:23 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/03 23:18:03 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,27 +67,6 @@ void	init_info_struct(t_philo_inf *inf, int num, char **args)
 	}
 }
 
-t_philos	*create_philos_struct(int num)
-{
-	t_philos	*top;
-	t_philos	*tmp;
-	t_philos	*new;
-
-	top = (t_philos *)malloc(sizeof(t_philos));
-	tmp = top;
-	while (num > 0)
-	{
-		new = (t_philos *)malloc(sizeof(t_philos));//malloc
-		tmp->left = new;
-		new->right = tmp;
-		tmp = tmp->left;
-		num -= 1;
-	}
-	tmp->left = top;
-	top->right = tmp;
-	return (top);
-}
-
 void	init_philos_struct(t_philos *philos, int num)
 {
 	struct timeval	tv;
@@ -96,14 +75,13 @@ void	init_philos_struct(t_philos *philos, int num)
 	if (gettimeofday(&tv, NULL))
 	{
 		printf("get time error!\n");
-		exit(1);
 	}
-	i = 1;
-	while (i <= num)
+	i = 0;
+	while (i < num)
 	{
-		philos->id = i;
-		philos->last_eat_time = tv;
-		philos = philos->left;
+		philos[i].id = i + 1;
+		philos[i].status = LIVE;
+		philos[i].last_eat_time = tv;
 		i += 1;
 	}
 }
