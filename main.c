@@ -6,12 +6,12 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 13:16:33 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/05 12:37:16 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/05 17:04:27 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /* compile command */
-//[$ ./philo 3 600 300 200 2]
+//[$ ./philo 4 410 200 200 2]
 
 #include "philosopher.h"
 
@@ -23,7 +23,7 @@ long	get_timestamp(void)
 
 	if (gettimeofday(&tv, NULL))
 	{
-		printf("get time error!\n");
+		printf("----- get time error! -----\n");
 	}
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
@@ -62,11 +62,6 @@ void	put_forks(t_philos *philo)
 	put_second_fork(philo);
 }
 
-void	think(t_philos *philo)
-{
-	printf("%ld %d is thinking\n", get_timestamp(), philo->id);
-}
-
 void	eat(t_philos *philo)
 {
 	pthread_mutex_lock(&(philo->mut_last_eat_time));
@@ -80,6 +75,11 @@ void	philo_sleep(t_philos *philo)
 {
 	printf("%ld %d is sleeping\n", get_timestamp(), philo->id);
 	usleep(inf.time_to_sleep * 1000);
+}
+
+void	think(t_philos *philo)
+{
+	printf("%ld %d is thinking\n", get_timestamp(), philo->id);
 }
 
 void	*philosopher(void *arg)
