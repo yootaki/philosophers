@@ -2,7 +2,7 @@
 NAME = philo
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread -g -O1
 
 SRCS = main.c init.c ft_atoi.c
 

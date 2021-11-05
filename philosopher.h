@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 23:50:30 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/04 11:22:27 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/04 17:19:53 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,13 @@ typedef struct s_philo_inf
 
 typedef struct s_philos
 {
+	struct s_philos	*left;
+	struct s_philos	*right;
 	int				id;
 	enum status		status;
-	struct timeval	last_eat_time;
+	long			*last_eat_time;
+	pthread_mutex_t	mut_fork;
+	pthread_mutex_t	mut_last_eat_time;
 }t_philos;
 
 /* init.c */
@@ -52,5 +56,7 @@ void		init_philos_struct(t_philos *philos, int num);
 
 /* utils */
 int			ft_atoi(char *str);
+
+long		get_timestamp(void);
 
 #endif

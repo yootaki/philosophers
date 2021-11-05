@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 13:16:20 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/03 23:18:03 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/04 17:24:21 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,21 +67,44 @@ void	init_info_struct(t_philo_inf *inf, int num, char **args)
 	}
 }
 
+t_philos	*create_philos_struct(int num)
+{
+	t_philos	*philos;
+	t_philos	*top;
+	t_philos	*new;
+
+	philos = (t_philos *)malloc(sizeof(t_philos));
+	top = philos;
+	num -= 1;
+	while (num > 0)
+	{
+		new = (t_philos *)malloc(sizeof(t_philos));
+		philos->left = new;
+		new->right = philos;
+		philos = new;
+		num -= 1;
+	}
+	philos->left = top;
+	top->right = philos;
+	return (top);
+}
+
 void	init_philos_struct(t_philos *philos, int num)
 {
-	struct timeval	tv;
-	int	i;
+	long	timestamp;
+	int		i;
 
-	if (gettimeofday(&tv, NULL))
+	timestamp = get_timestamp();
+	i = 1;
+	while (i <= num)
 	{
-		printf("get time error!\n");
-	}
-	i = 0;
-	while (i < num)
-	{
-		philos[i].id = i + 1;
-		philos[i].status = LIVE;
-		philos[i].last_eat_time = tv;
+		philos->id = i;
+		philos->status = LIVE;
+		philos->last_eat_time = (long *)malloc(sizeof(long));
+		*(philos->last_eat_time) = timestamp;
+		pthread_mutex_init(&philos->mut_fork, NULL);
+		pthread_mutex_init(&philos->mut_last_eat_time, NULL);
+		philos = philos->left;
 		i += 1;
 	}
 }
