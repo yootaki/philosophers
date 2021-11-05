@@ -2,7 +2,7 @@
 NAME = philo
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=thread -g -O1
+CFLAGS = -Wall -Wextra -Werror
 
 SRCS = main.c init.c ft_atoi.c
 
@@ -35,7 +35,8 @@ re: fclean all
 # **************************************************
 # **************************************************
 
-debug: CFLAGS += -g3 -fsanitize=address
+#debug: CFLAGS += -g3 -fsanitize=address
+debug: CFLAGS += -fsanitize=thread -g -O1
 
 debug: re
 

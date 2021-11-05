@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 13:16:33 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/05 17:04:27 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/05 22:41:25 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,10 @@ void	get_second_fork(t_philos *philo)
 
 void	get_forks(t_philos *philo)
 {
+	if (philo->id % 2 == 1)
+	{
+		usleep(100);
+	}
 	get_first_fork(philo);
 	get_second_fork(philo);
 }
@@ -85,18 +89,15 @@ void	think(t_philos *philo)
 void	*philosopher(void *arg)
 {
 	t_philos	*philo;
-	int			i;
 
 	philo = (t_philos *)arg;
-	i = 0;
-	while (i < 5)//この条件はいずれ消す。終了は哲学者が死ぬか、任意の回数食事を終えるかのどちらかの場合。
+	while (philo->status == LIVE)
 	{
 		get_forks(philo);
 		eat(philo);
 		put_forks(philo);
 		philo_sleep(philo);
 		think(philo);
-		i += 1;
 	}
 	return (NULL);
 }
@@ -115,9 +116,10 @@ void	*monitor(void *arg)
 		{
 			philo->status = DEID;
 			printf("%ld:%ld:%ld\n", now, *(philo->last_eat_time), now - *(philo->last_eat_time));
-			printf("%ld %d died\n", now, philo->id);
+			printf("\x1b[31m%ld %d died\x1b[39m\n", now, philo->id);
 		}
 		pthread_mutex_unlock(&(philo->mut_last_eat_time));
+		usleep(100);
 	}
 	return (NULL);
 }

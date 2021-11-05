@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 23:50:30 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/04 17:19:53 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/05 21:23:14 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ enum status
 
 typedef struct s_philo_inf
 {
-	int	philo_num;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	end_eat_num_to_finish;
+	int		philo_num;
+	long	time_to_die;
+	long	time_to_eat;
+	long	time_to_sleep;
+	int		end_eat_num_to_finish;
 }t_philo_inf;
 
 typedef struct s_philos
