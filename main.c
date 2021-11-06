@@ -15,6 +15,11 @@
 
 #include "philosopher.h"
 
+#define GET_FORK "has taken a fork"
+#define EAT "is eating"
+#define SLEEP "is sleeping"
+#define THINK "is thinking"
+
 t_philo_inf	inf;
 
 long	get_timestamp(void)
@@ -28,26 +33,37 @@ long	get_timestamp(void)
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
+void	print_philo_action(long timestamp, int id, char *action)
+{
+	printf("%ld %d %s\n", timestamp, id, action);
+}
+
 void	get_first_fork(t_philos *philo)
 {
 	pthread_mutex_lock(&philo->mut_fork);
-	printf("%ld %d has taken a fork %d\n", get_timestamp(), philo->id, philo->id);
+	print_philo_action(get_timestamp(), philo->id, GET_FORK);
+	// printf("%ld %d has taken a fork %d\n", get_timestamp(), philo->id, philo->id);
 }
 
 void	get_second_fork(t_philos *philo)
 {
 	pthread_mutex_lock(&philo->left->mut_fork);
-	printf("%ld %d has taken a fork %d\n", get_timestamp(), philo->id, philo->left->id);
+	print_philo_action(get_timestamp(), philo->id, GET_FORK);
+	// printf("%ld %d has taken a fork %d\n", get_timestamp(), philo->id, philo->left->id);
 }
 
 void	get_forks(t_philos *philo)
 {
 	if (philo->id % 2 == 1)
 	{
-		usleep(100);
+		get_first_fork(philo);
+		get_second_fork(philo);
 	}
-	get_first_fork(philo);
-	get_second_fork(philo);
+	else
+	{
+		get_second_fork(philo);
+		get_first_fork(philo);
+	}
 }
 
 void	put_first_fork(t_philos *philo)
@@ -71,19 +87,22 @@ void	eat(t_philos *philo)
 	pthread_mutex_lock(&(philo->mut_last_eat_time));
 	*(philo->last_eat_time) = get_timestamp();
 	pthread_mutex_unlock(&(philo->mut_last_eat_time));
-	printf("%ld %d is eating\n", *(philo->last_eat_time), philo->id);
+	print_philo_action(*(philo->last_eat_time), philo->id, EAT);
+	// printf("%ld %d is eating\n", *(philo->last_eat_time), philo->id);
 	usleep(inf.time_to_eat * 1000);
 }
 
 void	philo_sleep(t_philos *philo)
 {
-	printf("%ld %d is sleeping\n", get_timestamp(), philo->id);
+	print_philo_action(get_timestamp(), philo->id, SLEEP);
+	// printf("%ld %d is sleeping\n", get_timestamp(), philo->id);
 	usleep(inf.time_to_sleep * 1000);
 }
 
 void	think(t_philos *philo)
 {
-	printf("%ld %d is thinking\n", get_timestamp(), philo->id);
+	print_philo_action(get_timestamp(), philo->id, THINK);
+	// printf("%ld %d is thinking\n", get_timestamp(), philo->id);
 }
 
 void	*philosopher(void *arg)
@@ -163,14 +182,7 @@ int	main(int argc, char **argv)
 	}
 
 	/* free philos, thread, mut */
-	// i = 0;
-	// while (i < inf.end_eat_num_to_finish)
-	// {
-		// free(mut[i]);
-		// free(thread[i]);
-		// free(philos[i]);
-		// i += 1;
-	// }
+	//リークしないようfreeすること
 
 	printf("Finished!!!\n");
 	return (0);
