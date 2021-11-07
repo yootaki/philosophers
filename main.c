@@ -30,7 +30,7 @@ long	get_timestamp(void)
 	{
 		printf("----- get time error! -----\n");
 	}
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+	return (tv.tv_sec * 1000000 + tv.tv_usec);
 }
 
 void	print_philo_action(long timestamp, int id, char *action)
@@ -42,14 +42,12 @@ void	get_first_fork(t_philos *philo)
 {
 	pthread_mutex_lock(&philo->mut_fork);
 	print_philo_action(get_timestamp(), philo->id, GET_FORK);
-	// printf("%ld %d has taken a fork %d\n", get_timestamp(), philo->id, philo->id);
 }
 
 void	get_second_fork(t_philos *philo)
 {
 	pthread_mutex_lock(&philo->left->mut_fork);
 	print_philo_action(get_timestamp(), philo->id, GET_FORK);
-	// printf("%ld %d has taken a fork %d\n", get_timestamp(), philo->id, philo->left->id);
 }
 
 void	get_forks(t_philos *philo)
@@ -88,21 +86,18 @@ void	eat(t_philos *philo)
 	*(philo->last_eat_time) = get_timestamp();
 	pthread_mutex_unlock(&(philo->mut_last_eat_time));
 	print_philo_action(*(philo->last_eat_time), philo->id, EAT);
-	// printf("%ld %d is eating\n", *(philo->last_eat_time), philo->id);
-	usleep(inf.time_to_eat * 1000);
+	usleep(inf.time_to_eat);
 }
 
 void	philo_sleep(t_philos *philo)
 {
 	print_philo_action(get_timestamp(), philo->id, SLEEP);
-	// printf("%ld %d is sleeping\n", get_timestamp(), philo->id);
-	usleep(inf.time_to_sleep * 1000);
+	usleep(inf.time_to_sleep);
 }
 
 void	think(t_philos *philo)
 {
 	print_philo_action(get_timestamp(), philo->id, THINK);
-	// printf("%ld %d is thinking\n", get_timestamp(), philo->id);
 }
 
 void	*philosopher(void *arg)
@@ -181,7 +176,7 @@ int	main(int argc, char **argv)
 		i += 1;
 	}
 
-	/* free philos, thread, mut */
+	/* free philos, thread, mut and destroy mutex*/
 	//リークしないようfreeすること
 
 	printf("Finished!!!\n");
