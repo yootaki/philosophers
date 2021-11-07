@@ -6,12 +6,17 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 23:50:30 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/05 21:23:14 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/07 22:41:48by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHER_H
 # define PHILOSOPHER_H
+
+# define GET_FORK "has taken a fork"
+# define EAT "is eating"
+# define SLEEP "is sleeping"
+# define THINK "is thinking"
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -38,6 +43,7 @@ typedef struct s_philo_inf
 
 typedef struct s_philos
 {
+	t_philo_inf		*info;
 	struct s_philos	*left;
 	struct s_philos	*right;
 	int				id;
@@ -48,14 +54,26 @@ typedef struct s_philos
 }t_philos;
 
 /* init.c */
-bool		is_digit(char *arg);
 bool		validate_args(int num, char **args);
-void		init_info_struct(t_philo_inf *inf, int num, char **args);
+void		init_info_struct(t_philo_inf *info, int num, char **args);
 t_philos	*create_philos_struct(int num);
-void		init_philos_struct(t_philos *philos, int num);
+void		init_philos_struct(t_philos *philos, t_philo_inf *inf);
+
+/* get_forks.c */
+void		get_first_fork(t_philos *philo);
+void		get_second_fork(t_philos *philo);
+void		get_forks(t_philos *philo);
+
+/* put_forks.c */
+void		put_first_fork(t_philos *philo);
+void		put_second_fork(t_philos *philo);
+void		put_forks(t_philos *philo);
 
 /* utils */
 int			ft_atoi(char *str);
+bool		is_digit(char *arg);
+
+void		print_philo_action(long timestamp, int id, char *action);
 
 long		get_timestamp(void);
 
