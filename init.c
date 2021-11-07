@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 13:16:20 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/07 12:59:17 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/07 20:59:09 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,9 @@ bool	validate_args(int num, char **args)
 void	init_info_struct(t_philo_inf *inf, int num, char **args)
 {
 	inf->philo_num = ft_atoi(args[1]);
-	//それぞれの時間はμsで計算している
-	inf->time_to_die = (ft_atoi(args[2]) * 1000);
-	inf->time_to_eat = (ft_atoi(args[3]) * 1000);
-	inf->time_to_sleep = (ft_atoi(args[4]) * 1000);
+	inf->time_to_die = ft_atoi(args[2]);
+	inf->time_to_eat = ft_atoi(args[3]);
+	inf->time_to_sleep = ft_atoi(args[4]);
 	if (num == 5)
 	{
 		inf->end_eat_num_to_finish = ft_atoi(args[5]);

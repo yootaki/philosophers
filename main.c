@@ -30,7 +30,7 @@ long	get_timestamp(void)
 	{
 		printf("----- get time error! -----\n");
 	}
-	return (tv.tv_sec * 1000000 + tv.tv_usec);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
 void	print_philo_action(long timestamp, int id, char *action)
@@ -80,19 +80,38 @@ void	put_forks(t_philos *philo)
 	put_second_fork(philo);
 }
 
+void	few_seconds_sleep(long after_time)
+{
+	long	now;
+
+	now = get_timestamp();
+	while (1)
+	{
+		usleep(1000);
+		now = get_timestamp();
+		if (now >= after_time)
+		{
+			break ;
+		}
+	}
+}
+
 void	eat(t_philos *philo)
 {
 	pthread_mutex_lock(&(philo->mut_last_eat_time));
 	*(philo->last_eat_time) = get_timestamp();
 	pthread_mutex_unlock(&(philo->mut_last_eat_time));
 	print_philo_action(*(philo->last_eat_time), philo->id, EAT);
-	usleep(inf.time_to_eat);
+	few_seconds_sleep(*(philo->last_eat_time) + inf.time_to_eat);
 }
 
 void	philo_sleep(t_philos *philo)
 {
-	print_philo_action(get_timestamp(), philo->id, SLEEP);
-	usleep(inf.time_to_sleep);
+	long	time;
+
+	time = get_timestamp();
+	print_philo_action(time, philo->id, SLEEP);
+	few_seconds_sleep(time + inf.time_to_sleep);
 }
 
 void	think(t_philos *philo)
@@ -132,7 +151,6 @@ void	*monitor(void *arg)
 		if (now - last >= inf.time_to_die)
 		{
 			philo->status = DEID;
-			printf("%ld:%ld:%ld\n", now, last, now - last);
 			printf("\x1b[31m%ld %d died\x1b[39m\n", now, philo->id);
 		}
 		usleep(100);
