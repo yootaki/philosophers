@@ -15,13 +15,7 @@
 
 #include "philosopher.h"
 
-#define GET_FORK "has taken a fork"
-#define EAT "is eating"
-#define SLEEP "is sleeping"
-#define THINK "is thinking"
-
-t_philo_inf	inf;
-
+/* Function to get a timestamp and convert it to milliseconds and return it. */
 long	get_timestamp(void)
 {
 	struct timeval	tv;
@@ -38,89 +32,49 @@ void	print_philo_action(long timestamp, int id, char *action)
 	printf("%ld %d %s\n", timestamp, id, action);
 }
 
-void	get_first_fork(t_philos *philo)
+/* Function to sleep until a after_time. */
+void	few_seconds_sleep(long after_time)
 {
-	pthread_mutex_lock(&philo->mut_fork);
-	print_philo_action(get_timestamp(), philo->id, GET_FORK);
-	// printf("%ld %d has taken a fork %d\n", get_timestamp(), philo->id, philo->id);
-}
+	long	now;
 
-void	get_second_fork(t_philos *philo)
-{
-	pthread_mutex_lock(&philo->left->mut_fork);
-	print_philo_action(get_timestamp(), philo->id, GET_FORK);
-	// printf("%ld %d has taken a fork %d\n", get_timestamp(), philo->id, philo->left->id);
-}
-
-void	get_forks(t_philos *philo)
-{
-	if (philo->id % 2 == 1)
+	now = get_timestamp();
+	while (1)
 	{
-		get_first_fork(philo);
-		get_second_fork(philo);
-	}
-	else
-	{
-		get_second_fork(philo);
-		get_first_fork(philo);
+		usleep(1000);
+		now = get_timestamp();
+		if (now >= after_time)
+		{
+			break ;
+		}
 	}
 }
 
-void	put_first_fork(t_philos *philo)
-{
-	pthread_mutex_unlock(&philo->mut_fork);
-}
-
-void	put_second_fork(t_philos *philo)
-{
-	pthread_mutex_unlock(&philo->left->mut_fork);
-}
-
-void	put_forks(t_philos *philo)
-{
-	put_first_fork(philo);
-	put_second_fork(philo);
-}
-
+/* Update the last time you ate and wait for an arbitrary number of seconds. */
 void	eat(t_philos *philo)
 {
 	pthread_mutex_lock(&(philo->mut_last_eat_time));
 	*(philo->last_eat_time) = get_timestamp();
 	pthread_mutex_unlock(&(philo->mut_last_eat_time));
 	print_philo_action(*(philo->last_eat_time), philo->id, EAT);
-	// printf("%ld %d is eating\n", *(philo->last_eat_time), philo->id);
-	usleep(inf.time_to_eat * 1000);
+	few_seconds_sleep(*(philo->last_eat_time) + philo->info->time_to_eat);
 }
 
+/* Wait for an arbitrary number of seconds. */
 void	philo_sleep(t_philos *philo)
 {
-	print_philo_action(get_timestamp(), philo->id, SLEEP);
-	// printf("%ld %d is sleeping\n", get_timestamp(), philo->id);
-	usleep(inf.time_to_sleep * 1000);
+	long	time;
+
+	time = get_timestamp();
+	print_philo_action(time, philo->id, SLEEP);
+	few_seconds_sleep(time + philo->info->time_to_sleep);
 }
 
 void	think(t_philos *philo)
 {
 	print_philo_action(get_timestamp(), philo->id, THINK);
-	// printf("%ld %d is thinking\n", get_timestamp(), philo->id);
 }
 
-void	*philosopher(void *arg)
-{
-	t_philos	*philo;
-
-	philo = (t_philos *)arg;
-	while (philo->status == LIVE)
-	{
-		get_forks(philo);
-		eat(philo);
-		put_forks(philo);
-		philo_sleep(philo);
-		think(philo);
-	}
-	return (NULL);
-}
-
+/* Monitor the philosopher's status and flag any deaths. */
 void	*monitor(void *arg)
 {
 	t_philos	*philo;
@@ -128,25 +82,46 @@ void	*monitor(void *arg)
 	long		last;
 
 	philo = (t_philos *)arg;
-	while (philo->status == LIVE)
+	while (philo->info->status == LIVE)
 	{
 		now = get_timestamp();
 		pthread_mutex_lock(&(philo->mut_last_eat_time));
 		last = *(philo->last_eat_time);
-		pthread_mutex_unlock(&(philo->mut_last_eat_time));
-		if (now - last >= inf.time_to_die)
+		if (now - last >= philo->info->time_to_die)
 		{
-			philo->status = DEID;
-			printf("%ld:%ld:%ld\n", now, last, now - last);
+			philo->info->status = DEID;
+			// printf("%ld:%ld:%ld\n", now, last, philo->info->time_to_die);
 			printf("\x1b[31m%ld %d died\x1b[39m\n", now, philo->id);
 		}
+		pthread_mutex_unlock(&(philo->mut_last_eat_time));
 		usleep(100);
 	}
 	return (NULL);
 }
 
+/* Continue the process until the philosopher is dead. */
+void	*philosopher(void *arg)
+{
+	t_philos	*philo;
+	pthread_t	thread;
+
+	philo = (t_philos *)arg;
+	pthread_create(&thread, NULL, monitor, philo);
+	while (philo->info->status == LIVE)
+	{
+		get_forks(philo);
+		eat(philo);
+		put_forks(philo);
+		philo_sleep(philo);
+		think(philo);
+	}
+	pthread_join(thread, NULL);
+	return (NULL);
+}
+
 int	main(int argc, char **argv)
 {
+	t_philo_inf	info;
 	t_philos	*philos;
 
 	/* validate and initialize */
@@ -155,33 +130,29 @@ int	main(int argc, char **argv)
 		printf("The argument is incorrect.\n");
 		return (1);
 	}
-	init_info_struct(&inf, argc - 1, argv);
-	philos = create_philos_struct(inf.philo_num);
-	init_philos_struct(philos, inf.philo_num);
+	init_info_struct(&info, argc - 1, argv);
+	philos = create_philos_struct(info.philo_num);
+	init_philos_struct(philos, &info);
 
 	/* start program */
 	pthread_t	*thread;
 	int	i;
-	thread = (pthread_t *)malloc(sizeof(pthread_t) * (inf.philo_num * 2));
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * info.philo_num);
 	i = 0;
-	while (i < inf.philo_num)
+	while (i < info.philo_num)
 	{
 		pthread_create(&thread[i], NULL, philosopher, philos);
-		pthread_create(&thread[i + inf.philo_num], NULL, monitor, philos);
 		philos = philos->left;
 		i += 1;
 	}
-
-	/* end thread */
 	i = 0;
-	while (i < inf.philo_num)
+	while (i < info.philo_num)
 	{
 		pthread_join(thread[i], NULL);
-		pthread_detach(thread[i + inf.philo_num]);
 		i += 1;
 	}
 
-	/* free philos, thread, mut */
+	/* free philos, thread, mut and destroy mutex*/
 	//リークしないようfreeすること
 
 	printf("Finished!!!\n");
