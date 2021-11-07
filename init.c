@@ -34,6 +34,7 @@ bool	validate_args(int num, char **args)
 
 void	init_info_struct(t_philo_inf *info, int num, char **args)
 {
+	info->status = LIVE;
 	info->philo_num = ft_atoi(args[1]);
 	info->time_to_die = ft_atoi(args[2]);
 	info->time_to_eat = ft_atoi(args[3]);
@@ -77,7 +78,6 @@ void	init_philos_struct(t_philos *philos, t_philo_inf *info)
 	{
 		philos->info = info;
 		philos->id = i;
-		philos->status = LIVE;
 		philos->last_eat_time = (long *)malloc(sizeof(long));
 		*(philos->last_eat_time) = timestamp;
 		pthread_mutex_init(&philos->mut_fork, NULL);

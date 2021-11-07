@@ -74,23 +74,6 @@ void	think(t_philos *philo)
 	print_philo_action(get_timestamp(), philo->id, THINK);
 }
 
-/* Continue the process until the philosopher is dead. */
-void	*philosopher(void *arg)
-{
-	t_philos	*philo;
-
-	philo = (t_philos *)arg;
-	while (philo->status == LIVE)
-	{
-		get_forks(philo);
-		eat(philo);
-		put_forks(philo);
-		philo_sleep(philo);
-		think(philo);
-	}
-	return (NULL);
-}
-
 /* Monitor the philosopher's status and flag any deaths. */
 void	*monitor(void *arg)
 {
@@ -99,20 +82,40 @@ void	*monitor(void *arg)
 	long		last;
 
 	philo = (t_philos *)arg;
-	while (philo->status == LIVE)
+	while (philo->info->status == LIVE)
 	{
 		now = get_timestamp();
 		pthread_mutex_lock(&(philo->mut_last_eat_time));
 		last = *(philo->last_eat_time);
-		pthread_mutex_unlock(&(philo->mut_last_eat_time));
 		if (now - last >= philo->info->time_to_die)
 		{
-			philo->status = DEID;
+			philo->info->status = DEID;
 			// printf("%ld:%ld:%ld\n", now, last, philo->info->time_to_die);
 			printf("\x1b[31m%ld %d died\x1b[39m\n", now, philo->id);
 		}
+		pthread_mutex_unlock(&(philo->mut_last_eat_time));
 		usleep(100);
 	}
+	return (NULL);
+}
+
+/* Continue the process until the philosopher is dead. */
+void	*philosopher(void *arg)
+{
+	t_philos	*philo;
+	pthread_t	thread;
+
+	philo = (t_philos *)arg;
+	pthread_create(&thread, NULL, monitor, philo);
+	while (philo->info->status == LIVE)
+	{
+		get_forks(philo);
+		eat(philo);
+		put_forks(philo);
+		philo_sleep(philo);
+		think(philo);
+	}
+	pthread_join(thread, NULL);
 	return (NULL);
 }
 
@@ -132,26 +135,20 @@ int	main(int argc, char **argv)
 	init_philos_struct(philos, &info);
 
 	/* start program */
-	//monitorのスレッドは各philosopherの中で作成して呼び出せば良いと思われる。
-	//monitor_threadみたいな名前にしてそれぞれのphilosopherスレッドの中で処理したほうがいいと思う。
 	pthread_t	*thread;
 	int	i;
-	thread = (pthread_t *)malloc(sizeof(pthread_t) * (info.philo_num * 2));
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * info.philo_num);
 	i = 0;
 	while (i < info.philo_num)
 	{
 		pthread_create(&thread[i], NULL, philosopher, philos);
-		pthread_create(&thread[i + info.philo_num], NULL, monitor, philos);
 		philos = philos->left;
 		i += 1;
 	}
-
-	/* end thread */
 	i = 0;
 	while (i < info.philo_num)
 	{
 		pthread_join(thread[i], NULL);
-		pthread_detach(thread[i + info.philo_num]);
 		i += 1;
 	}
 
