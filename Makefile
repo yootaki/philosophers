@@ -1,46 +1,35 @@
 
-NAME = philo
+NAME	:= philo
+COMPILER:= gcc
+CFLAGS	:= -Wall -Wextra -Werror -MMD -MP
+LIBS	:=
+INCLUDE	:= -I./include
+SRCS_DIR:= ./src
+SRCS	:= main.c init.c get_forks.c put_forks.c ft_atoi.c is_digit.c
+OBJS_DIR:= ./obj
+OBJS	:= $(addprefix $(OBJS_DIR)/, $(notdir $(SRCS:.c=.o)))
+DEPS	:= $(OBJS:.o=.d)
 
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+$(NAME): $(OBJS) $(LIBS)
+	$(COMPILER) -o $@ $^
 
-SRCS = main.c init.c get_forks.c put_forks.c ft_atoi.c is_digit.c
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
+	mkdir -p $(OBJS_DIR)
+	$(COMPILER) $(CFLAGS) $(INCLUDE) -o $@ -c $<
 
-OBJS = $(SRCS:.c=.o) $(UTILS:.c=.o)
-
-DEBUG_DIR = philo.dSYM
-
-# **************************************************
-# **************************************************
-
-all: $(NAME)
-
-.c.o:
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
-
-# **************************************************
-# **************************************************
+all: clean $(NAME)
 
 clean:
-	$(RM) $(DEBUG_DIR) $(OBJS)
+	rm -f $(NAME) $(OBJS) $(DEPS)
 
 fclean: clean
-	rm -f $(NAME)
 
 re: fclean all
 
-# **************************************************
-# **************************************************
-
-#debug: CFLAGS += -g3 -fsanitize=address
 debug: CFLAGS += -fsanitize=thread -g -O1
 
 debug: re
 
-# **************************************************
-# **************************************************
+.PHONY: all clean fclean re debug
 
-.PHONY: all debug fclean clean re
+-include $(DEPS)
