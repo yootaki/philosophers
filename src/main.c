@@ -12,18 +12,6 @@
 
 #include "philosopher.h"
 
-/* Function to get a timestamp and convert it to milliseconds and return it. */
-long	get_timestamp(void)
-{
-	struct timeval	tv;
-
-	if (gettimeofday(&tv, NULL))
-	{
-		printf("----- get time error! -----\n");
-	}
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-}
-
 bool	check_philo_status(t_philos *philo)
 {
 	if (philo->info->status == DIED)
@@ -87,8 +75,7 @@ int	main(int argc, char **argv)
 	t_philo_inf	info;
 	t_philos	*philos;
 
-	/* validate and initialize */
-	if(validate_args(argc - 1, argv) == false)
+	if (validate_args(argc - 1, argv) == false)
 	{
 		return (1);
 	}
@@ -96,7 +83,6 @@ int	main(int argc, char **argv)
 	philos = create_philos_struct(info.philo_num);
 	init_philos_struct(philos, &info);
 
-	/* start program */
 	pthread_t	*thread;
 	int	i;
 	thread = (pthread_t *)malloc(sizeof(pthread_t) * info.philo_num);
@@ -116,6 +102,8 @@ int	main(int argc, char **argv)
 
 	/* free philos, thread, mut and destroy mutex*/
 	//リークしないようfreeすること
+
+	system("leaks philo");
 
 	return (0);
 }
