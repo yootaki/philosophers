@@ -55,11 +55,24 @@ typedef struct s_philos
 	pthread_mutex_t	mut_last_eat_time;
 }t_philos;
 
-/* init.c */
+/* main.c */
+long		get_timestamp(void);
+bool		check_philo_status(t_philos *philo);
+
+/* validate.c */
 bool		validate_args(int num, char **args);
+
+/* init.c */
 void		init_info_struct(t_philo_inf *info, int num, char **args);
 t_philos	*create_philos_struct(int num);
 void		init_philos_struct(t_philos *philos, t_philo_inf *inf);
+
+/* philos_action.c */
+void		print_philo_action(long timestamp, int id, char *action);
+void		few_seconds_sleep(long after_time);
+void		philo_eat(t_philos *philo);
+void		philo_sleep(t_philos *philo);
+void		philo_think(t_philos *philo);
 
 /* get_forks.c */
 void		get_first_fork(t_philos *philo);
@@ -74,10 +87,6 @@ void		put_forks(t_philos *philo);
 /* utils */
 int			ft_atoi(char *str);
 bool		is_digit(char *arg);
-
-void		print_philo_action(long timestamp, int id, char *action);
-
-long		get_timestamp(void);
 
 /* output colors */
 # define RESET "\033[0m"
