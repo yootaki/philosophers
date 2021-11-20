@@ -29,7 +29,7 @@
 enum status
 {
 	LIVE,
-	DEID
+	DIED
 };
 
 typedef struct s_philo_inf
@@ -39,16 +39,18 @@ typedef struct s_philo_inf
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
+	int				eat_num;
+	int				end_eat_flag;
 	int				end_eat_num_to_finish;
 }t_philo_inf;
 
 typedef struct s_philos
 {
+	int				id;
+	long			*last_eat_time;
 	t_philo_inf		*info;
 	struct s_philos	*left;
 	struct s_philos	*right;
-	int				id;
-	long			*last_eat_time;
 	pthread_mutex_t	mut_fork;
 	pthread_mutex_t	mut_last_eat_time;
 }t_philos;

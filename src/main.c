@@ -10,10 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/* compile command */
-//[$ ./philo 4 410 200 200 2]
-
 #include "philosopher.h"
+#include <stdbool.h>
 
 /* Function to get a timestamp and convert it to milliseconds and return it. */
 long	get_timestamp(void)
@@ -53,6 +51,7 @@ void	few_seconds_sleep(long after_time)
 void	eat(t_philos *philo)
 {
 	pthread_mutex_lock(&(philo->mut_last_eat_time));
+	philo->info->eat_num += 1;
 	*(philo->last_eat_time) = get_timestamp();
 	pthread_mutex_unlock(&(philo->mut_last_eat_time));
 	print_philo_action(*(philo->last_eat_time), philo->id, EAT);
@@ -74,6 +73,20 @@ void	think(t_philos *philo)
 	print_philo_action(get_timestamp(), philo->id, THINK);
 }
 
+bool	check_philo_status(t_philos *philo)
+{
+	if (philo->info->status == DIED)
+	{
+		return (false);
+	}
+	else if (philo->info->end_eat_flag == 1 && \
+			philo->info->eat_num >= philo->info->end_eat_num_to_finish)
+	{
+		return (false);
+	}
+	return (true);
+}
+
 /* Monitor the philosopher's status and flag any deaths. */
 void	*monitor(void *arg)
 {
@@ -82,14 +95,14 @@ void	*monitor(void *arg)
 	long		last;
 
 	philo = (t_philos *)arg;
-	while (philo->info->status == LIVE)
+	while (check_philo_status(philo))
 	{
 		now = get_timestamp();
 		pthread_mutex_lock(&(philo->mut_last_eat_time));
 		last = *(philo->last_eat_time);
 		if (now - last >= philo->info->time_to_die)
 		{
-			philo->info->status = DEID;
+			philo->info->status = DIED;
 			// printf("%ld:%ld:%ld\n", now, last, philo->info->time_to_die);
 			printf("\x1b[31m%ld %d died\x1b[39m\n", now, philo->id);
 		}
@@ -107,7 +120,7 @@ void	*philosopher(void *arg)
 
 	philo = (t_philos *)arg;
 	pthread_create(&thread, NULL, monitor, philo);
-	while (philo->info->status == LIVE)
+	while (check_philo_status(philo))
 	{
 		get_forks(philo);
 		eat(philo);

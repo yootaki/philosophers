@@ -12,26 +12,6 @@
 
 #include "philosopher.h"
 
-bool	validate_args(int num, char **args)
-{
-	int	i;
-
-	if (num < 4 || num > 5)
-	{
-		return (false);
-	}
-	i = 1;
-	while (i <= num)
-	{
-		if (is_digit(args[i]) == false)
-		{
-			return (false);
-		}
-		i += 1;
-	}
-	return (true);
-}
-
 void	init_info_struct(t_philo_inf *info, int num, char **args)
 {
 	info->status = LIVE;
@@ -39,9 +19,15 @@ void	init_info_struct(t_philo_inf *info, int num, char **args)
 	info->time_to_die = ft_atoi(args[2]);
 	info->time_to_eat = ft_atoi(args[3]);
 	info->time_to_sleep = ft_atoi(args[4]);
+	info->eat_num = 0;
 	if (num == 5)
 	{
+		info->end_eat_flag = 1;
 		info->end_eat_num_to_finish = ft_atoi(args[5]);
+	}
+	else
+	{
+		info->end_eat_flag = 0;
 	}
 }
 
