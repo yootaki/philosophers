@@ -5,7 +5,13 @@ CFLAGS	:= -Wall -Wextra -Werror -MMD -MP
 LIBS	:=
 INCLUDE	:= -I./include
 SRCS_DIR:= ./src
-SRCS	:= main.c init.c get_forks.c put_forks.c ft_atoi.c is_digit.c
+SRCS	:= main.c\
+			validate.c\
+			init.c\
+			get_forks.c\
+			put_forks.c\
+			ft_atoi.c\
+			is_digit.c
 OBJS_DIR:= ./obj
 OBJS	:= $(addprefix $(OBJS_DIR)/, $(notdir $(SRCS:.c=.o)))
 DEPS	:= $(OBJS:.o=.d)
