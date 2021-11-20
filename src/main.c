@@ -138,7 +138,6 @@ int	main(int argc, char **argv)
 	/* validate and initialize */
 	if(validate_args(argc - 1, argv) == false)
 	{
-		printf("The argument is incorrect.\n");
 		return (1);
 	}
 	init_info_struct(&info, argc - 1, argv);
