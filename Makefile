@@ -9,6 +9,7 @@ SRCS	:= main.c\
 			validate.c\
 			init.c\
 			philos_action.c\
+			get_timestamp.c\
 			get_forks.c\
 			put_forks.c\
 			ft_atoi.c\
