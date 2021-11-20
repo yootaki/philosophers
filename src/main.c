@@ -35,16 +35,29 @@ void	few_seconds_sleep(long after_time)
 {
 	long	now;
 
-	now = get_timestamp();
 	while (1)
 	{
-		usleep(1000);
 		now = get_timestamp();
 		if (now >= after_time)
 		{
 			break ;
 		}
+		usleep(100);
 	}
+}
+
+bool	check_philo_status(t_philos *philo)
+{
+	if (philo->info->status == DIED)
+	{
+		return (false);
+	}
+	else if (philo->info->end_eat_flag == 1 && \
+			philo->info->eat_num >= philo->info->end_eat_num_to_finish)
+	{
+		return (false);
+	}
+	return (true);
 }
 
 /* Update the last time you ate and wait for an arbitrary number of seconds. */
@@ -73,20 +86,6 @@ void	think(t_philos *philo)
 	print_philo_action(get_timestamp(), philo->id, THINK);
 }
 
-bool	check_philo_status(t_philos *philo)
-{
-	if (philo->info->status == DIED)
-	{
-		return (false);
-	}
-	else if (philo->info->end_eat_flag == 1 && \
-			philo->info->eat_num >= philo->info->end_eat_num_to_finish)
-	{
-		return (false);
-	}
-	return (true);
-}
-
 /* Monitor the philosopher's status and flag any deaths. */
 void	*monitor(void *arg)
 {
@@ -103,7 +102,6 @@ void	*monitor(void *arg)
 		if (now - last >= philo->info->time_to_die)
 		{
 			philo->info->status = DIED;
-			// printf("%ld:%ld:%ld\n", now, last, philo->info->time_to_die);
 			printf("\x1b[31m%ld %d died\x1b[39m\n", now, philo->id);
 		}
 		pthread_mutex_unlock(&(philo->mut_last_eat_time));
@@ -168,6 +166,5 @@ int	main(int argc, char **argv)
 	/* free philos, thread, mut and destroy mutex*/
 	//リークしないようfreeすること
 
-	printf("Finished!!!\n");
 	return (0);
 }
