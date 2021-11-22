@@ -100,8 +100,6 @@ int	main(int argc, char **argv)
 		i += 1;
 	}
 
-	/* free philos, thread, mut and destroy mutex*/
-	//リークしないようfreeすること
 	t_philos	*tmp;
 	i = 0;
 	while (i < info.philo_num)
