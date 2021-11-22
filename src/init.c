@@ -67,7 +67,7 @@ void	init_philos_struct(t_philos *philos, t_philo_inf *info)
 		philos->last_eat_time = (long *)malloc(sizeof(long));
 		*(philos->last_eat_time) = timestamp;
 		pthread_mutex_init(&philos->mut_fork, NULL);
-		pthread_mutex_init(&philos->mut_last_eat_time, NULL);
+		pthread_mutex_init(&philos->info->mut_action, NULL);
 		philos = philos->left;
 		i += 1;
 	}

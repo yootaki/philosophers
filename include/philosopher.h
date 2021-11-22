@@ -42,6 +42,7 @@ typedef struct s_philo_inf
 	int				eat_num;
 	int				end_eat_flag;
 	int				end_eat_num_to_finish;
+	pthread_mutex_t	mut_action;
 }t_philo_inf;
 
 typedef struct s_philos
@@ -52,7 +53,6 @@ typedef struct s_philos
 	struct s_philos	*left;
 	struct s_philos	*right;
 	pthread_mutex_t	mut_fork;
-	pthread_mutex_t	mut_last_eat_time;
 }t_philos;
 
 /* main.c */

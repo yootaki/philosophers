@@ -37,14 +37,14 @@ void	*monitor(void *arg)
 	while (check_philo_status(philo))
 	{
 		now = get_timestamp();
-		pthread_mutex_lock(&(philo->mut_last_eat_time));
+		pthread_mutex_lock(&(philo->info->mut_action));
 		last = *(philo->last_eat_time);
 		if (now - last >= philo->info->time_to_die)
 		{
 			philo->info->status = DIED;
 			printf("%s%ld %d died%s\n", RED, now, philo->id, RESET);
 		}
-		pthread_mutex_unlock(&(philo->mut_last_eat_time));
+		pthread_mutex_unlock(&(philo->info->mut_action));
 		usleep(100);
 	}
 	return (NULL);
@@ -66,7 +66,7 @@ void	*philosopher(void *arg)
 		philo_sleep(philo);
 		philo_think(philo);
 	}
-	pthread_join(thread, NULL);
+	pthread_detach(thread);
 	return (NULL);
 }
 
@@ -102,8 +102,31 @@ int	main(int argc, char **argv)
 
 	/* free philos, thread, mut and destroy mutex*/
 	//リークしないようfreeすること
-
-	system("leaks philo");
+	t_philos	*tmp;
+	i = 0;
+	while (i < info.philo_num)
+	{
+		tmp = philos->left;
+		free(philos->last_eat_time);
+		free(philos);
+		philos = tmp;
+		i += 1;
+	}
+	free(thread);
 
 	return (0);
+}
+
+__attribute__((destructor))
+void    destructor(void)
+{
+    int    status;
+
+    status = system("leaks philo &> leaksout");
+    if (status)
+    {
+        write(2, "leak!!!\n", 8);
+        system("cat leaksout >/dev/stderr");
+        exit(1);
+    }
 }
