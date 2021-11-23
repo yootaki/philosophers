@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 23:32:55 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/22 15:04:51 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/23 11:07:05 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ void	few_seconds_sleep(long after_time)
 void	philo_eat(t_philos *philo)
 {
 	pthread_mutex_lock(&(philo->info->mut_action));
+	philo->info->eat_num += 1;
+	*(philo->last_eat_time) = get_timestamp();
 	if (philo->info->status == DIED)
 	{
 		pthread_mutex_unlock(&(philo->info->mut_action));
 		return ;
 	}
-	philo->info->eat_num += 1;
-	*(philo->last_eat_time) = get_timestamp();
 	print_philo_action(*(philo->last_eat_time), philo->id, EAT);
 	pthread_mutex_unlock(&(philo->info->mut_action));
 	few_seconds_sleep(*(philo->last_eat_time) + philo->info->time_to_eat);
