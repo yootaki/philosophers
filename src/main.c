@@ -30,18 +30,26 @@ bool	check_philo_status(t_philos *philo)
 	return (true);
 }
 
-void	free_philos(int philo_num, t_philos *philos)
+void	free_all(int philo_num, t_philos *philos, pthread_t **thread)
 {
 	t_philos	*tmp;
 	int			i;
 
-	i = 0;
-	while (i < philo_num)
+	if (philos != NULL)
 	{
-		tmp = philos->left;
-		free(philos);
-		philos = tmp;
-		i += 1;
+		i = 0;
+		while (i < philo_num)
+		{
+			tmp = philos->left;
+			free(philos);
+			philos = tmp;
+			i += 1;
+		}
+	}
+	if (thread != NULL)
+	{
+		free(thread[PHILO]);
+		free(thread[MONITOR]);
 	}
 }
 
@@ -49,22 +57,25 @@ int	main(int argc, char **argv)
 {
 	t_philo_inf	info;
 	t_philos	*philos;
+	pthread_t	*thread[NUM];
 
 	if (validate_args(argc - 1, argv) == false)
-	{
 		return (EXIT_FAILURE);
-	}
 	init_info_struct(&info, argc - 1, argv);
-	philos = create_philos_struct(info.philo_num);
-	if (philos == NULL)
-		return (EXIT_FAILURE);
-	init_philos_struct(philos, &info);
-	if (launch_thread(philos, &philosopher) == false || \
-		launch_thread(philos, &monitor) == false)
+	if (create_philos_struct(info.philo_num, &philos) == false || \
+		create_threads(info.philo_num, thread) == false)
 	{
-		free_philos(info.philo_num, philos);
+		free_all(info.philo_num, philos, NULL);
 		return (EXIT_FAILURE);
 	}
-	free_philos(info.philo_num, philos);
+	init_philos_struct(philos, &info);
+	if (launch_thread(philos, thread[PHILO], &philosopher) == false || \
+		launch_thread(philos, thread[MONITOR], &monitor) == false)
+	{
+		free_all(info.philo_num, philos, thread);
+		return (EXIT_FAILURE);
+	}
+	join_all_thread(info.philo_num, thread);
+	free_all(info.philo_num, philos, thread);
 	return (EXIT_SUCCESS);
 }

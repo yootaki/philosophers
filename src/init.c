@@ -32,30 +32,43 @@ void	init_info_struct(t_philo_inf *info, int num, char **args)
 	}
 }
 
-t_philos	*create_philos_struct(int num)
+bool	create_philos_struct(int philo_num, t_philos **philos)
 {
-	t_philos	*philos;
 	t_philos	*top;
 	t_philos	*new;
+	t_philos	*tmp;
 
-	philos = (t_philos *)malloc(sizeof(t_philos));
-	if (philos == NULL)
-		return (NULL);
-	top = philos;
-	num -= 1;
-	while (num > 0)
+	*philos = (t_philos *)malloc(sizeof(t_philos));
+	if (*philos == NULL)
+		return (false);
+	top = *philos;
+	tmp = *philos;
+	philo_num -= 1;
+	while (philo_num > 0)
 	{
 		new = (t_philos *)malloc(sizeof(t_philos));
 		if (new == NULL)
-			return (NULL);
-		philos->left = new;
-		new->right = philos;
-		philos = new;
-		num -= 1;
+			return (false);
+		tmp->left = new;
+		new->right = tmp;
+		tmp = new;
+		philo_num -= 1;
 	}
-	philos->left = top;
-	top->right = philos;
-	return (top);
+	tmp->left = top;
+	top->right = tmp;
+	*philos = top;
+	return (true);
+}
+
+bool	create_threads(int philo_num, pthread_t **thread)
+{
+	thread[PHILO] = (pthread_t *)malloc(sizeof(pthread_t) * philo_num);
+	thread[MONITOR] = (pthread_t *)malloc(sizeof(pthread_t) * philo_num);
+	if (thread[PHILO] == NULL || thread[MONITOR] == NULL)
+	{
+		return (false);
+	}
+	return (true);
 }
 
 void	init_philos_struct(t_philos *philos, t_philo_inf *info)

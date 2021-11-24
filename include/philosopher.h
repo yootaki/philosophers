@@ -32,6 +32,13 @@ enum status
 	FINISH
 };
 
+enum threads
+{
+	PHILO,
+	MONITOR,
+	NUM
+};
+
 typedef struct s_philo_inf
 {
 	enum status		status;
@@ -62,15 +69,16 @@ bool		check_philo_status(t_philos *philo);
 /* thread.c */
 void		*monitor(void *arg);
 void		*philosopher(void *arg);
-void		join_all_thread(int philo_num, pthread_t *thread);
-bool		launch_thread(t_philos *philos, void*(*func)(void*));
+bool		launch_thread(t_philos *philos, pthread_t *thread, void*(*func)(void*));
+void		join_all_thread(int philo_num, pthread_t **thread);
 
 /* validate.c */
 bool		validate_args(int num, char **args);
 
 /* init.c */
 void		init_info_struct(t_philo_inf *info, int num, char **args);
-t_philos	*create_philos_struct(int num);
+bool	create_philos_struct(int philo_num, t_philos **philos);
+bool		create_threads(int philo_num, pthread_t **thread);
 void		init_philos_struct(t_philos *philos, t_philo_inf *inf);
 
 /* philos_action.c */
@@ -81,13 +89,13 @@ bool		philo_sleep(t_philos *philo);
 bool		philo_think(t_philos *philo);
 
 /* get_forks.c */
-bool		get_first_fork(t_philos *philo);
-bool		get_second_fork(t_philos *philo);
+bool		get_right_fork(t_philos *philo);
+bool		get_left_fork(t_philos *philo);
 bool		get_forks(t_philos *philo);
 
 /* put_forks.c */
-bool		put_first_fork(t_philos *philo);
-bool		put_second_fork(t_philos *philo);
+bool		put_right_fork(t_philos *philo);
+bool		put_left_fork(t_philos *philo);
 bool		put_forks(t_philos *philo);
 
 /* utils */
