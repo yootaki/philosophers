@@ -19,6 +19,7 @@ void	init_info_struct(t_philo_inf *info, int num, char **args)
 	info->time_to_die = ft_atoi(args[2]);
 	info->time_to_eat = ft_atoi(args[3]);
 	info->time_to_sleep = ft_atoi(args[4]);
+	pthread_mutex_init(&info->mut_action, NULL);
 	info->eat_num = 0;
 	if (num == 5)
 	{
@@ -38,11 +39,15 @@ t_philos	*create_philos_struct(int num)
 	t_philos	*new;
 
 	philos = (t_philos *)malloc(sizeof(t_philos));
+	if (philos == NULL)
+		return (NULL);
 	top = philos;
 	num -= 1;
 	while (num > 0)
 	{
 		new = (t_philos *)malloc(sizeof(t_philos));
+		if (new == NULL)
+			return (NULL);
 		philos->left = new;
 		new->right = philos;
 		philos = new;
@@ -64,10 +69,8 @@ void	init_philos_struct(t_philos *philos, t_philo_inf *info)
 	{
 		philos->info = info;
 		philos->id = i;
-		philos->last_eat_time = (long *)malloc(sizeof(long));
-		*(philos->last_eat_time) = timestamp;
+		philos->last_eat_time = timestamp;
 		pthread_mutex_init(&philos->mut_fork, NULL);
-		pthread_mutex_init(&philos->info->mut_action, NULL);
 		philos = philos->left;
 		i += 1;
 	}

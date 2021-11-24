@@ -30,53 +30,19 @@ bool	check_philo_status(t_philos *philo)
 	return (true);
 }
 
-/* Monitor the philosopher's status and flag any deaths. */
-void	*monitor(void *arg)
+void	free_philos(int philo_num, t_philos *philos)
 {
-	t_philos	*philo;
-	long		now;
-	long		last;
+	t_philos	*tmp;
+	int			i;
 
-	philo = (t_philos *)arg;
-	while (check_philo_status(philo))
+	i = 0;
+	while (i < philo_num)
 	{
-		now = get_timestamp();
-		pthread_mutex_lock(&(philo->info->mut_action));
-		last = *(philo->last_eat_time);
-		if (now - last >= philo->info->time_to_die)
-		{
-			philo->info->status = FINISH;
-			printf("%s%ld %d died%s\n", RED, now, philo->id, RESET);
-		}
-		pthread_mutex_unlock(&(philo->info->mut_action));
-		usleep(100);
+		tmp = philos->left;
+		free(philos);
+		philos = tmp;
+		i += 1;
 	}
-	return (NULL);
-}
-
-/* Continue the process until the philosopher is dead. */
-void	*philosopher(void *arg)
-{
-	t_philos	*philo;
-	pthread_t	thread;
-
-	philo = (t_philos *)arg;
-	pthread_create(&thread, NULL, monitor, philo);
-	while (check_philo_status(philo))
-	{
-		if (get_forks(philo) == false)
-			break ;
-		if (philo_eat(philo) == false)
-			break ;
-		if (put_forks(philo) == false)
-			break ;
-		if (philo_sleep(philo) == false)
-			break ;
-		if (philo_think(philo) == false)
-			break ;
-	}
-	pthread_detach(thread);
-	return (NULL);
 }
 
 int	main(int argc, char **argv)
@@ -86,54 +52,19 @@ int	main(int argc, char **argv)
 
 	if (validate_args(argc - 1, argv) == false)
 	{
-		return (1);
+		return (EXIT_FAILURE);
 	}
 	init_info_struct(&info, argc - 1, argv);
 	philos = create_philos_struct(info.philo_num);
+	if (philos == NULL)
+		return (EXIT_FAILURE);
 	init_philos_struct(philos, &info);
-
-	pthread_t	*thread;
-	int	i;
-	thread = (pthread_t *)malloc(sizeof(pthread_t) * info.philo_num);
-	i = 0;
-	while (i < info.philo_num)
+	if (launch_thread(philos, &philosopher) == false || \
+		launch_thread(philos, &monitor) == false)
 	{
-		pthread_create(&thread[i], NULL, philosopher, philos);
-		philos = philos->left;
-		i += 1;
+		free_philos(info.philo_num, philos);
+		return (EXIT_FAILURE);
 	}
-	i = 0;
-	while (i < info.philo_num)
-	{
-		pthread_join(thread[i], NULL);
-		i += 1;
-	}
-
-	t_philos	*tmp;
-	i = 0;
-	while (i < info.philo_num)
-	{
-		tmp = philos->left;
-		free(philos->last_eat_time);
-		free(philos);
-		philos = tmp;
-		i += 1;
-	}
-	free(thread);
-
-	return (0);
-}
-
-__attribute__((destructor))
-void    destructor(void)
-{
-    int    status;
-
-    status = system("leaks philo &> leaksout");
-    if (status)
-    {
-        write(2, "leak!!!\n", 8);
-        system("cat leaksout >/dev/stderr");
-        exit(1);
-    }
+	free_philos(info.philo_num, philos);
+	return (EXIT_SUCCESS);
 }
