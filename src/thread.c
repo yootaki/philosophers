@@ -6,12 +6,11 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 14:10:17 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/24 14:10:50 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/24 16:23:22 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
-
 
 /* Monitor the philosopher's status and flag any deaths. */
 void	*monitor(void *arg)
@@ -32,7 +31,7 @@ void	*monitor(void *arg)
 			printf("%s%ld %d died%s\n", RED, now, philo->id, RESET);
 		}
 		pthread_mutex_unlock(&(philo->info->mut_action));
-		usleep(100);
+		usleep(500);
 	}
 	return (NULL);
 }
@@ -59,26 +58,10 @@ void	*philosopher(void *arg)
 	return (NULL);
 }
 
-void	join_all_thread(int philo_num, pthread_t *thread)
+bool	launch_thread(t_philos *philos, pthread_t *thread, void*(*func)(void*))
 {
 	int	i;
 
-	i = 0;
-	while (i < philo_num)
-	{
-		pthread_join(thread[i], NULL);
-		i += 1;
-	}
-}
-
-bool	launch_thread(t_philos *philos, void*(*func)(void*))
-{
-	pthread_t	*thread;
-	int			i;
-
-	thread = (pthread_t *)malloc(sizeof(pthread_t) * philos->info->philo_num);
-	if (thread == NULL)
-		return (false);
 	i = 0;
 	while (i < philos->info->philo_num)
 	{
@@ -86,7 +69,18 @@ bool	launch_thread(t_philos *philos, void*(*func)(void*))
 		philos = philos->left;
 		i += 1;
 	}
-	join_all_thread(philos->info->philo_num, thread);
-	free(thread);
 	return (true);
+}
+
+void	join_all_thread(int philo_num, pthread_t **thread)
+{
+	int	i;
+
+	i = 0;
+	while (i < philo_num)
+	{
+		pthread_join(thread[PHILO][i], NULL);
+		pthread_join(thread[MONITOR][i], NULL);
+		i += 1;
+	}
 }
