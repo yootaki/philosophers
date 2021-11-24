@@ -28,8 +28,8 @@
 
 enum status
 {
-	LIVE,
-	DIED
+	CONTINUE,
+	FINISH
 };
 
 typedef struct s_philo_inf
@@ -70,19 +70,19 @@ void		init_philos_struct(t_philos *philos, t_philo_inf *inf);
 /* philos_action.c */
 void		print_philo_action(long timestamp, int id, char *action);
 void		few_seconds_sleep(long after_time);
-void		philo_eat(t_philos *philo);
-void		philo_sleep(t_philos *philo);
-void		philo_think(t_philos *philo);
+bool		philo_eat(t_philos *philo);
+bool		philo_sleep(t_philos *philo);
+bool		philo_think(t_philos *philo);
 
 /* get_forks.c */
-void		get_first_fork(t_philos *philo);
-void		get_second_fork(t_philos *philo);
-void		get_forks(t_philos *philo);
+bool		get_first_fork(t_philos *philo);
+bool		get_second_fork(t_philos *philo);
+bool		get_forks(t_philos *philo);
 
 /* put_forks.c */
-void		put_first_fork(t_philos *philo);
-void		put_second_fork(t_philos *philo);
-void		put_forks(t_philos *philo);
+bool		put_first_fork(t_philos *philo);
+bool		put_second_fork(t_philos *philo);
+bool		put_forks(t_philos *philo);
 
 /* utils */
 int			ft_atoi(char *str);

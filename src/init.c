@@ -14,7 +14,7 @@
 
 void	init_info_struct(t_philo_inf *info, int num, char **args)
 {
-	info->status = LIVE;
+	info->status = CONTINUE;
 	info->philo_num = ft_atoi(args[1]);
 	info->time_to_die = ft_atoi(args[2]);
 	info->time_to_eat = ft_atoi(args[3]);
