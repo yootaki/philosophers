@@ -47,11 +47,11 @@ typedef struct s_philo_inf
 
 typedef struct s_philos
 {
-	int				id;
-	long			*last_eat_time;
 	t_philo_inf		*info;
 	struct s_philos	*left;
 	struct s_philos	*right;
+	int				id;
+	long			last_eat_time;
 	pthread_mutex_t	mut_fork;
 }t_philos;
 
@@ -59,13 +59,19 @@ typedef struct s_philos
 long		get_timestamp(void);
 bool		check_philo_status(t_philos *philo);
 
+/* thread.c */
+void		*monitor(void *arg);
+void		*philosopher(void *arg);
+void		join_all_thread(int philo_num, pthread_t *thread);
+bool		launch_thread(t_philos *philos, void*(*func)(void*));
+
 /* validate.c */
 bool		validate_args(int num, char **args);
 
 /* init.c */
 void		init_info_struct(t_philo_inf *info, int num, char **args);
 t_philos	*create_philos_struct(int num);
-bool		init_philos_struct(t_philos *philos, t_philo_inf *inf);
+void		init_philos_struct(t_philos *philos, t_philo_inf *inf);
 
 /* philos_action.c */
 void		print_philo_action(long timestamp, int id, char *action);

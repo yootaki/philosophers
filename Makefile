@@ -6,6 +6,7 @@ LIBS	:=
 INCLUDE	:= -I./include
 SRCS_DIR:= ./src
 SRCS	:= main.c\
+			thread.c\
 			validate.c\
 			init.c\
 			philos_action.c\
