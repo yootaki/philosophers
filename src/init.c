@@ -38,11 +38,15 @@ t_philos	*create_philos_struct(int num)
 	t_philos	*new;
 
 	philos = (t_philos *)malloc(sizeof(t_philos));
+	if (philos == NULL)
+		return (NULL);
 	top = philos;
 	num -= 1;
 	while (num > 0)
 	{
 		new = (t_philos *)malloc(sizeof(t_philos));
+		if (new == NULL)
+			return (NULL);
 		philos->left = new;
 		new->right = philos;
 		philos = new;
@@ -53,7 +57,7 @@ t_philos	*create_philos_struct(int num)
 	return (top);
 }
 
-void	init_philos_struct(t_philos *philos, t_philo_inf *info)
+bool	init_philos_struct(t_philos *philos, t_philo_inf *info)
 {
 	long	timestamp;
 	int		i;
@@ -65,10 +69,13 @@ void	init_philos_struct(t_philos *philos, t_philo_inf *info)
 		philos->info = info;
 		philos->id = i;
 		philos->last_eat_time = (long *)malloc(sizeof(long));
+		if (philos->last_eat_time == NULL)
+			return (false);
 		*(philos->last_eat_time) = timestamp;
 		pthread_mutex_init(&philos->mut_fork, NULL);
 		pthread_mutex_init(&philos->info->mut_action, NULL);
 		philos = philos->left;
 		i += 1;
 	}
+	return (true);
 }

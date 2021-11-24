@@ -13,7 +13,7 @@ SRCS	:= main.c\
 			get_forks.c\
 			put_forks.c\
 			ft_atoi.c\
-			is_digit.c
+			ft_isdigit.c
 OBJS_DIR:= ./obj
 OBJS	:= $(addprefix $(OBJS_DIR)/, $(notdir $(SRCS:.c=.o)))
 DEPS	:= $(OBJS:.o=.d)

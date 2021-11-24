@@ -79,39 +79,39 @@ void	*philosopher(void *arg)
 	return (NULL);
 }
 
-int	main(int argc, char **argv)
+bool	launch_thread(int philo_num, t_philos *philos, pthread_t *thread)
 {
-	t_philo_inf	info;
-	t_philos	*philos;
-
-	if (validate_args(argc - 1, argv) == false)
-	{
-		return (1);
-	}
-	init_info_struct(&info, argc - 1, argv);
-	philos = create_philos_struct(info.philo_num);
-	init_philos_struct(philos, &info);
-
-	pthread_t	*thread;
 	int	i;
-	thread = (pthread_t *)malloc(sizeof(pthread_t) * info.philo_num);
+
 	i = 0;
-	while (i < info.philo_num)
+	while (i < philo_num)
 	{
 		pthread_create(&thread[i], NULL, philosopher, philos);
 		philos = philos->left;
 		i += 1;
 	}
+	return (true);
+}
+
+void	join_philo_thread(int philo_num, pthread_t *thread)
+{
+	int	i;
+
 	i = 0;
-	while (i < info.philo_num)
+	while (i < philo_num)
 	{
 		pthread_join(thread[i], NULL);
 		i += 1;
 	}
+}
 
+void	free_all(int philo_num, t_philos *philos, pthread_t *thread)
+{
 	t_philos	*tmp;
+	int			i;
+
 	i = 0;
-	while (i < info.philo_num)
+	while (i < philo_num)
 	{
 		tmp = philos->left;
 		free(philos->last_eat_time);
@@ -120,20 +120,38 @@ int	main(int argc, char **argv)
 		i += 1;
 	}
 	free(thread);
-
-	return (0);
 }
 
-__attribute__((destructor))
-void    destructor(void)
+int	main(int argc, char **argv)
 {
-    int    status;
+	t_philo_inf	info;
+	t_philos	*philos;
+	pthread_t	*thread;
 
-    status = system("leaks philo &> leaksout");
-    if (status)
-    {
-        write(2, "leak!!!\n", 8);
-        system("cat leaksout >/dev/stderr");
-        exit(1);
-    }
+	philos = NULL;
+	thread = NULL;
+	if (validate_args(argc - 1, argv) == false)
+	{
+		return (EXIT_FAILURE);
+	}
+	init_info_struct(&info, argc - 1, argv);
+	philos = create_philos_struct(info.philo_num);
+	if (philos == NULL)
+		return (EXIT_FAILURE);
+	thread = (pthread_t *)malloc(sizeof(pthread_t) * info.philo_num);
+	if (thread == NULL)
+		return (EXIT_FAILURE);
+	if (init_philos_struct(philos, &info) == false)
+	{
+		free_all(info.philo_num, philos, thread);
+		return (EXIT_FAILURE);
+	}
+	if (launch_thread(info.philo_num, philos, thread) == false)
+	{
+		free_all(info.philo_num, philos, thread);
+		return (EXIT_FAILURE);
+	}
+	join_philo_thread(info.philo_num, thread);
+	free_all(info.philo_num, philos, thread);
+	return (EXIT_SUCCESS);
 }
