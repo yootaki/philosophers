@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 23:32:55 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/26 12:38:49 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/26 13:15:53 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ void	few_seconds_sleep(long after_time)
 		{
 			break ;
 		}
-		// usleep((after_time - now) / 2);
-		usleep(1000);
+		usleep(500);
 	}
 }
 
