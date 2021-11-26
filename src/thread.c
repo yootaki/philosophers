@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 14:10:17 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/24 16:23:22 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/24 18:33:37 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	*monitor(void *arg)
 			printf("%s%ld %d died%s\n", RED, now, philo->id, RESET);
 		}
 		pthread_mutex_unlock(&(philo->info->mut_action));
-		usleep(500);
+		usleep(1000);
 	}
 	return (NULL);
 }
