@@ -35,12 +35,14 @@ void	free_all(int philo_num, t_philos *philos, pthread_t **thread)
 	t_philos	*tmp;
 	int			i;
 
+	pthread_mutex_destroy(&(philos->info->mut_action));
 	if (philos != NULL)
 	{
 		i = 0;
 		while (i < philo_num)
 		{
 			tmp = philos->left;
+			pthread_mutex_destroy(&(philos->mut_fork));
 			free(philos);
 			philos = tmp;
 			i += 1;
