@@ -1,6 +1,6 @@
 
 NAME	:= philo
-COMPILER:= gcc -fsanitize=thread
+COMPILER:= gcc
 CFLAGS	:= -Wall -Wextra -Werror -MMD -MP
 LIBS	:=
 INCLUDE	:= -I./include
