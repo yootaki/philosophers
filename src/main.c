@@ -14,19 +14,15 @@
 
 bool	check_philo_status(t_philos *philo)
 {
-	pthread_mutex_lock(&(philo->info->mut_action));
 	if (philo->info->status == FINISH)
 	{
-		pthread_mutex_unlock(&(philo->info->mut_action));
 		return (false);
 	}
 	else if (philo->info->end_eat_flag == 1 && \
 			philo->info->eat_num >= philo->info->end_eat_num_to_finish)
 	{
-		pthread_mutex_unlock(&(philo->info->mut_action));
 		return (false);
 	}
-	pthread_mutex_unlock(&(philo->info->mut_action));
 	return (true);
 }
 
