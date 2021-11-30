@@ -26,13 +26,13 @@
 # include <pthread.h>
 # include <stdbool.h>
 
-enum status
+enum e_status
 {
 	CONTINUE,
 	FINISH
 };
 
-enum threads
+enum e_threads
 {
 	PHILO,
 	MONITOR,
@@ -41,7 +41,7 @@ enum threads
 
 typedef struct s_philo_inf
 {
-	enum status		status;
+	enum e_status	status;
 	int				philo_num;
 	long			time_to_die;
 	long			time_to_eat;
@@ -69,7 +69,9 @@ bool		check_philo_status(t_philos *philo);
 /* thread.c */
 void		*monitor(void *arg);
 void		*philosopher(void *arg);
-bool		launch_thread(t_philos *philos, pthread_t *thread, void*(*func)(void*));
+bool		launch_thread(t_philos *philos, \
+							pthread_t *thread, \
+							void*(*func)(void*));
 void		join_all_thread(int philo_num, pthread_t **thread);
 
 /* validate.c */
@@ -77,7 +79,7 @@ bool		validate_args(int num, char **args);
 
 /* init.c */
 void		init_info_struct(t_philo_inf *info, int num, char **args);
-bool	create_philos_struct(int philo_num, t_philos **philos);
+bool		create_philos_struct(int philo_num, t_philos **philos);
 bool		create_threads(int philo_num, pthread_t **thread);
 void		init_philos_struct(t_philos *philos, t_philo_inf *inf);
 

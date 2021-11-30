@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 23:32:55 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/26 13:15:53 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/30 14:52:29 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,15 @@ void	few_seconds_sleep(long after_time)
 bool	philo_eat(t_philos *philo)
 {
 	pthread_mutex_lock(&(philo->info->mut_action));
-	philo->info->eat_num += 1;
-	philo->last_eat_time = get_timestamp();
-	if (philo->info->status == FINISH)
+	if (check_philo_status(philo) == false)
 	{
 		pthread_mutex_unlock(&(philo->mut_fork));
 		pthread_mutex_unlock(&(philo->left->mut_fork));
 		pthread_mutex_unlock(&(philo->info->mut_action));
 		return (false);
 	}
+	philo->info->eat_num += 1;
+	philo->last_eat_time = get_timestamp();
 	print_philo_action(philo->last_eat_time, philo->id, EAT);
 	pthread_mutex_unlock(&(philo->info->mut_action));
 	few_seconds_sleep(philo->last_eat_time + philo->info->time_to_eat);
@@ -59,7 +59,7 @@ bool	philo_sleep(t_philos *philo)
 
 	pthread_mutex_lock(&(philo->info->mut_action));
 	time = get_timestamp();
-	if (philo->info->status == FINISH)
+	if (check_philo_status(philo) == false)
 	{
 		pthread_mutex_unlock(&(philo->info->mut_action));
 		return (false);
@@ -73,7 +73,7 @@ bool	philo_sleep(t_philos *philo)
 bool	philo_think(t_philos *philo)
 {
 	pthread_mutex_lock(&(philo->info->mut_action));
-	if (philo->info->status == FINISH)
+	if (check_philo_status(philo) == false)
 	{
 		pthread_mutex_unlock(&(philo->info->mut_action));
 		return (false);
