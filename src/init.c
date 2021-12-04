@@ -12,7 +12,7 @@
 
 #include "philosopher.h"
 
-void	init_info_struct(t_philo_inf *info, int argc, char **args)
+void	init_info_struct(t_philo_info *info, int argc, char **args)
 {
 	info->status = CONTINUE;
 	info->philo_num = ft_atoi(args[1]);
@@ -71,7 +71,7 @@ bool	create_threads(int philo_num, pthread_t **thread)
 	return (true);
 }
 
-void	init_philos_struct(t_philos *philos, t_philo_inf *info)
+void	init_philos_struct(t_philos *philos, t_philo_info *info)
 {
 	long	timestamp;
 	int		i;

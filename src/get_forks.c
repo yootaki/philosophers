@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 22:36:46 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/30 14:50:13 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/11/30 14:50:13ootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ bool	get_forks(t_philos *philo)
 	{
 		usleep(500);
 		if (get_right_fork(philo) == false)
+			return (false);
+		if (philo->info->philo_num == 1)
 			return (false);
 		if (get_left_fork(philo) == false)
 		{

@@ -53,9 +53,9 @@ void	free_all(int philo_num, t_philos *philos, pthread_t **thread)
 
 int	main(int argc, char **argv)
 {
-	t_philo_inf	info;
-	t_philos	*philos;
-	pthread_t	*thread[NUM];
+	t_philo_info	info;
+	t_philos		*philos;
+	pthread_t		*thread[NUM];
 
 	if (validate_args(argc - 1, argv) == false)
 		return (EXIT_FAILURE);
