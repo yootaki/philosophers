@@ -12,20 +12,6 @@
 
 #include "philosopher.h"
 
-bool	check_philo_status(t_philos *philo)
-{
-	if (philo->info->status == FINISH)
-	{
-		return (false);
-	}
-	else if (philo->info->end_eat_flag == true && \
-			philo->info->eat_num >= philo->info->end_eat_num_to_finish)
-	{
-		return (false);
-	}
-	return (true);
-}
-
 void	free_all(int philo_num, t_philos *philos, pthread_t **thread)
 {
 	t_philos	*tmp;
@@ -76,17 +62,4 @@ int	main(int argc, char **argv)
 	join_all_thread(info.philo_num, thread);
 	free_all(info.philo_num, philos, thread);
 	return (EXIT_SUCCESS);
-}
-__attribute__((destructor))
-void    destructor(void)
-{
-    int    status;
-
-    status = system("leaks philo &> leaksout");
-    if (status)
-    {
-        write(2, "leak!!!\n", 8);
-        system("cat leaksout >/dev/stderr");
-        exit(1);
-    }
 }

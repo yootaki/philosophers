@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 23:32:55 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/30 14:52:29 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/12/05 08:29:51 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ bool	philo_eat(t_philos *philo)
 		pthread_mutex_unlock(&(philo->info->mut_action));
 		return (false);
 	}
-	philo->info->eat_num += 1;
+	philo->eat_num += 1;
 	philo->last_eat_time = get_timestamp();
 	print_philo_action(philo->last_eat_time, philo->id, EAT);
 	pthread_mutex_unlock(&(philo->info->mut_action));
