@@ -77,3 +77,16 @@ int	main(int argc, char **argv)
 	free_all(info.philo_num, philos, thread);
 	return (EXIT_SUCCESS);
 }
+__attribute__((destructor))
+void    destructor(void)
+{
+    int    status;
+
+    status = system("leaks philo &> leaksout");
+    if (status)
+    {
+        write(2, "leak!!!\n", 8);
+        system("cat leaksout >/dev/stderr");
+        exit(1);
+    }
+}

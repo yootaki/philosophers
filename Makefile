@@ -29,9 +29,10 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 all: clean $(NAME)
 
 clean:
-	rm -f $(NAME) $(OBJS) $(DEPS)
+	$(RM) $(OBJS) $(DEPS)
 
 fclean: clean
+	$(RM) $(NAME)
 
 re: fclean all
 
