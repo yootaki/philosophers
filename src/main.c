@@ -18,7 +18,7 @@ bool	check_philo_status(t_philos *philo)
 	{
 		return (false);
 	}
-	else if (philo->info->end_eat_flag == 1 && \
+	else if (philo->info->end_eat_flag == true && \
 			philo->info->eat_num >= philo->info->end_eat_num_to_finish)
 	{
 		return (false);

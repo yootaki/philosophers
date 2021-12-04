@@ -12,7 +12,7 @@
 
 #include "philosopher.h"
 
-void	init_info_struct(t_philo_inf *info, int num, char **args)
+void	init_info_struct(t_philo_inf *info, int argc, char **args)
 {
 	info->status = CONTINUE;
 	info->philo_num = ft_atoi(args[1]);
@@ -21,14 +21,14 @@ void	init_info_struct(t_philo_inf *info, int num, char **args)
 	info->time_to_sleep = ft_atoi(args[4]);
 	pthread_mutex_init(&info->mut_action, NULL);
 	info->eat_num = 0;
-	if (num == 5)
+	if (argc == 5)
 	{
-		info->end_eat_flag = 1;
+		info->end_eat_flag = true;
 		info->end_eat_num_to_finish = ft_atoi(args[5]);
 	}
 	else
 	{
-		info->end_eat_flag = 0;
+		info->end_eat_flag = false;
 	}
 }
 

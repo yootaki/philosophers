@@ -47,7 +47,7 @@ typedef struct s_philo_inf
 	long			time_to_eat;
 	long			time_to_sleep;
 	int				eat_num;
-	int				end_eat_flag;
+	bool			end_eat_flag;
 	int				end_eat_num_to_finish;
 	pthread_mutex_t	mut_action;
 }t_philo_inf;
@@ -78,7 +78,7 @@ void		join_all_thread(int philo_num, pthread_t **thread);
 bool		validate_args(int num, char **args);
 
 /* init.c */
-void		init_info_struct(t_philo_inf *info, int num, char **args);
+void		init_info_struct(t_philo_inf *info, int argc, char **args);
 bool		create_philos_struct(int philo_num, t_philos **philos);
 bool		create_threads(int philo_num, pthread_t **thread);
 void		init_philos_struct(t_philos *philos, t_philo_inf *inf);
