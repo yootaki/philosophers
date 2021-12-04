@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 14:10:17 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/30 14:48:28 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/12/05 08:18:52by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,13 @@
 void	*monitor(void *arg)
 {
 	t_philos	*philo;
-	long		now;
-	long		last;
 
 	philo = (t_philos *)arg;
 	while (check_philo_status(philo))
 	{
-		now = get_timestamp();
 		pthread_mutex_lock(&(philo->info->mut_action));
-		last = philo->last_eat_time;
-		if (now - last >= philo->info->time_to_die)
-		{
-			philo->info->status = FINISH;
-			printf("%s%ld %d died%s\n", RED, now, philo->id, RESET);
-		}
+		check_philo_life(philo);
+		check_philo_eatnum(philo);
 		pthread_mutex_unlock(&(philo->info->mut_action));
 		usleep(2500);
 	}

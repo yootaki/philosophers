@@ -6,6 +6,7 @@ LIBS	:=
 INCLUDE	:= -I./include
 SRCS_DIR:= ./src
 SRCS	:= main.c\
+			check_status.c\
 			thread.c\
 			validate.c\
 			init.c\

@@ -46,9 +46,8 @@ typedef struct s_philo_info
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
-	int				eat_num;
-	bool			end_eat_flag;
 	int				end_eat_num_to_finish;
+	bool			end_eat_flag;
 	pthread_mutex_t	mut_action;
 }t_philo_info;
 
@@ -58,13 +57,15 @@ typedef struct s_philos
 	struct s_philos	*left;
 	struct s_philos	*right;
 	int				id;
+	int				eat_num;
 	long			last_eat_time;
 	pthread_mutex_t	mut_fork;
 }t_philos;
 
-/* main.c */
-long		get_timestamp(void);
+/* check_status.c */
 bool		check_philo_status(t_philos *philo);
+void		check_philo_life(t_philos *philo);
+void		check_philo_eatnum(t_philos *philo);
 
 /* thread.c */
 void		*monitor(void *arg);
@@ -82,6 +83,9 @@ void		init_info_struct(t_philo_info *info, int argc, char **args);
 bool		create_philos_struct(int philo_num, t_philos **philos);
 bool		create_threads(int philo_num, pthread_t **thread);
 void		init_philos_struct(t_philos *philos, t_philo_info *inf);
+
+/* get_timestamp.c */
+long		get_timestamp(void);
 
 /* philos_action.c */
 void		print_philo_action(long timestamp, int id, char *action);

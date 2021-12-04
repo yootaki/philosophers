@@ -20,7 +20,6 @@ void	init_info_struct(t_philo_info *info, int argc, char **args)
 	info->time_to_eat = ft_atoi(args[3]);
 	info->time_to_sleep = ft_atoi(args[4]);
 	pthread_mutex_init(&info->mut_action, NULL);
-	info->eat_num = 0;
 	if (argc == 5)
 	{
 		info->end_eat_flag = true;
@@ -29,6 +28,7 @@ void	init_info_struct(t_philo_info *info, int argc, char **args)
 	else
 	{
 		info->end_eat_flag = false;
+		info->end_eat_num_to_finish = 0;
 	}
 }
 
@@ -82,6 +82,7 @@ void	init_philos_struct(t_philos *philos, t_philo_info *info)
 	{
 		philos->info = info;
 		philos->id = i;
+		philos->eat_num = 0;
 		philos->last_eat_time = timestamp;
 		pthread_mutex_init(&philos->mut_fork, NULL);
 		philos = philos->left;
