@@ -6,31 +6,57 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 22:22:34 by yootaki           #+#    #+#             */
-/*   Updated: 2021/11/30 14:20:40 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/12/05 07:22:10 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
+#include <limits.h>
+
+static bool	ft_ovcheck(int sign, long num, long next_num)
+{
+	long	ov_div;
+	long	ov_mod;
+
+	ov_div = INT_MAX / 10;
+	ov_mod = INT_MAX % 10;
+	if (sign == 1 && ((num > ov_div)
+			|| (ov_div == num && next_num > ov_mod)))
+	{
+		return (false);
+	}
+	if (sign == -1 && ((num > ov_div)
+			|| (ov_div == num && next_num > ov_mod + 1)))
+	{
+		return (false);
+	}
+	return (true);
+}
 
 bool	is_digit(char *arg)
 {
-	int	decimal_flag;
-	int	i;
+	int		i;
+	int		sign;
+	long	result;
+	bool	check;
 
-	decimal_flag = 0;
+	sign = 1;
+	result = 0;
 	i = 0;
-	while (arg[i] != '\0')
+	while (arg[i] == ' ' || (arg[i] >= 7 && arg[i] <= 13))
+		i++;
+	if (arg[i] == '-')
 	{
-		if (arg[i] == '.' && decimal_flag == 0)
-		{
-			decimal_flag = 1;
-			i += 1;
-		}
-		if (!(arg[i] >= '0' && arg[i] <= '9'))
-		{
+		return (false);
+	}
+	else if (arg[i] == '+')
+		i++;
+	while (arg[i] != '\0' && (arg[i] >= '0' && arg[i] <= '9'))
+	{
+		check = ft_ovcheck(sign, result, arg[i] - '0');
+		if (result > 0 && check == false)
 			return (false);
-		}
-		i += 1;
+		result = result * 10 + (arg[i++] - '0');
 	}
 	return (true);
 }

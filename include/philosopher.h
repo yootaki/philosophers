@@ -39,7 +39,7 @@ enum e_threads
 	NUM
 };
 
-typedef struct s_philo_inf
+typedef struct s_philo_info
 {
 	enum e_status	status;
 	int				philo_num;
@@ -50,11 +50,11 @@ typedef struct s_philo_inf
 	bool			end_eat_flag;
 	int				end_eat_num_to_finish;
 	pthread_mutex_t	mut_action;
-}t_philo_inf;
+}t_philo_info;
 
 typedef struct s_philos
 {
-	t_philo_inf		*info;
+	t_philo_info	*info;
 	struct s_philos	*left;
 	struct s_philos	*right;
 	int				id;
@@ -78,10 +78,10 @@ void		join_all_thread(int philo_num, pthread_t **thread);
 bool		validate_args(int num, char **args);
 
 /* init.c */
-void		init_info_struct(t_philo_inf *info, int argc, char **args);
+void		init_info_struct(t_philo_info *info, int argc, char **args);
 bool		create_philos_struct(int philo_num, t_philos **philos);
 bool		create_threads(int philo_num, pthread_t **thread);
-void		init_philos_struct(t_philos *philos, t_philo_inf *inf);
+void		init_philos_struct(t_philos *philos, t_philo_info *inf);
 
 /* philos_action.c */
 void		print_philo_action(long timestamp, int id, char *action);
