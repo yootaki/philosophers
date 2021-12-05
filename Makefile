@@ -14,8 +14,9 @@ SRCS	:= main.c\
 			get_timestamp.c\
 			get_forks.c\
 			put_forks.c\
-			ft_atoi.c\
-			ft_isdigit.c
+			free_all.c\
+			atoi.c\
+			is_correct_value.c
 OBJS_DIR:= ./obj
 OBJS	:= $(addprefix $(OBJS_DIR)/, $(notdir $(SRCS:.c=.o)))
 DEPS	:= $(OBJS:.o=.d)
@@ -30,10 +31,10 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 all: clean $(NAME)
 
 clean:
-	$(RM) $(OBJS) $(DEPS)
+	rm -rf $(OBJS_DIR)
 
 fclean: clean
-	$(RM) $(NAME)
+	rm -f $(NAME)
 
 re: fclean all
 

@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 22:22:34 by yootaki           #+#    #+#             */
-/*   Updated: 2021/12/05 07:29:20 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/12/05 08:51:58 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static bool	ft_ovcheck(int sign, long num, long next_num)
 	return (true);
 }
 
-bool	is_digit(char *arg)
+bool	is_correct_value(char *arg)
 {
 	int		i;
 	int		sign;
