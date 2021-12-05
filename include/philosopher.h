@@ -84,9 +84,6 @@ bool		create_philos_struct(int philo_num, t_philos **philos);
 bool		create_threads(int philo_num, pthread_t **thread);
 void		init_philos_struct(t_philos *philos, t_philo_info *inf);
 
-/* get_timestamp.c */
-long		get_timestamp(void);
-
 /* philos_action.c */
 void		print_philo_action(long timestamp, int id, char *action);
 void		few_seconds_sleep(long after_time);
@@ -106,7 +103,9 @@ bool		put_forks(t_philos *philo);
 
 /* utils */
 int			ft_atoi(char *str);
-bool		is_digit(char *arg);
+bool		is_correct_value(char *arg);
+long		get_timestamp(void);
+void		free_all(int philo_num, t_philos *philos, pthread_t **thread);
 
 /* output colors */
 # define RESET "\033[0m"

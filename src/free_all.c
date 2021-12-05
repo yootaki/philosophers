@@ -1,35 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   validate.c                                         :+:      :+:    :+:   */
+/*   free_all.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/20 10:38:47 by yootaki           #+#    #+#             */
-/*   Updated: 2021/12/05 08:54:19 by yootaki          ###   ########.fr       */
+/*   Created: 2021/12/05 08:55:58 by yootaki           #+#    #+#             */
+/*   Updated: 2021/12/05 08:56:19 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 
-bool	validate_args(int num, char **args)
+void	free_all(int philo_num, t_philos *philos, pthread_t **thread)
 {
-	int	i;
+	t_philos	*tmp;
+	int			i;
 
-	if (num < 4 || num > 5)
+	pthread_mutex_destroy(&(philos->info->mut_action));
+	if (philos != NULL)
 	{
-		printf("%sThe number of arguments is invalid.%s\n", RED, RESET);
-		return (false);
-	}
-	i = 1;
-	while (i <= num)
-	{
-		if (is_correct_value(args[i]) == false)
+		i = 0;
+		while (i < philo_num)
 		{
-			printf("%sArgument error.%s\n", RED, RESET);
-			return (false);
+			tmp = philos->left;
+			pthread_mutex_destroy(&(philos->mut_fork));
+			free(philos);
+			philos = tmp;
+			i += 1;
 		}
-		i += 1;
 	}
-	return (true);
+	if (thread != NULL)
+	{
+		free(thread[PHILO]);
+		free(thread[MONITOR]);
+	}
 }
