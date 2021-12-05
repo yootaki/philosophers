@@ -51,6 +51,7 @@ void	*philosopher(void *arg)
 	return (NULL);
 }
 
+/* This function receives a list of philosophers, an array of threads, and a function pointer as arguments. */
 bool	launch_thread(t_philos *philos, pthread_t *thread, void*(*func)(void*))
 {
 	int	i;
