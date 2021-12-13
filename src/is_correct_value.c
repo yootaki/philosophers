@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*   is_correct_value.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/07 22:22:34 by yootaki           #+#    #+#             */
-/*   Updated: 2021/12/05 08:51:58 by yootaki          ###   ########.fr       */
+/*   Created: 2021/12/13 13:39:17 by yootaki           #+#    #+#             */
+/*   Updated: 2021/12/13 17:23:26 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,10 @@ bool	is_correct_value(char *arg)
 		i++;
 	if (arg[i] == '0')
 		return (false);
-	while (arg[i] != '\0' && (arg[i] >= '0' && arg[i] <= '9'))
+	while (arg[i] != '\0')
 	{
+		if (!(arg[i] >= '0' && arg[i] <= '9'))
+			return (false);
 		check = ft_ovcheck(sign, result, arg[i] - '0');
 		if (result > 0 && check == false)
 			return (false);

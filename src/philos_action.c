@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 23:32:55 by yootaki           #+#    #+#             */
-/*   Updated: 2021/12/05 08:29:51 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/12/13 14:15:21 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,12 @@ bool	philo_sleep(t_philos *philo)
 	long	time;
 
 	pthread_mutex_lock(&(philo->info->mut_action));
-	time = get_timestamp();
 	if (check_philo_status(philo) == false)
 	{
 		pthread_mutex_unlock(&(philo->info->mut_action));
 		return (false);
 	}
+	time = get_timestamp();
 	print_philo_action(time, philo->id, SLEEP);
 	pthread_mutex_unlock(&(philo->info->mut_action));
 	few_seconds_sleep(time + philo->info->time_to_sleep);
