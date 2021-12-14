@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/05 08:34:58 by yootaki           #+#    #+#             */
-/*   Updated: 2021/12/05 08:36:13 by yootaki          ###   ########.fr       */
+/*   Created: 2021/12/13 17:24:43 by yootaki           #+#    #+#             */
+/*   Updated: 2021/12/14 16:01:11 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@ bool	check_philo_status(t_philos *philo)
 
 void	check_philo_life(t_philos *philo)
 {
-	long		now;
-	long		last;
+	long	now;
+	long	last;
 
 	now = get_timestamp();
 	last = philo->last_eat_time;
-	if (now - last >= philo->info->time_to_die)
+	if (philo->info->status != FINISH && \
+		now - last >= philo->info->time_to_die)
 	{
 		philo->info->status = FINISH;
 		printf("%s%ld %d died%s\n", RED, now, philo->id, RESET);
