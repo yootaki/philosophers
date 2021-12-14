@@ -18,9 +18,14 @@ void	*monitor(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
-	while (check_philo_status(philo))
+	while (1)
 	{
 		pthread_mutex_lock(&(philo->info->mut_action));
+		if (check_philo_status(philo) == false)
+		{
+			pthread_mutex_unlock(&(philo->info->mut_action));
+			break ;
+		}
 		check_philo_life(philo);
 		check_philo_eatnum(philo);
 		pthread_mutex_unlock(&(philo->info->mut_action));
@@ -35,7 +40,7 @@ void	*philosopher(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
-	while (check_philo_status(philo))
+	while (1)
 	{
 		if (get_forks(philo) == false)
 			break ;
