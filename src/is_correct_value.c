@@ -6,7 +6,7 @@
 /*   By: yootaki <yootaki@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 13:39:17 by yootaki           #+#    #+#             */
-/*   Updated: 2021/12/13 17:53:00 by yootaki          ###   ########.fr       */
+/*   Updated: 2021/12/14 17:01:45 by yootaki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ bool	is_correct_value(char *arg)
 
 	result = 0;
 	i = 0;
-	if (arg[i] == '-')
+	if (arg[i] == '-' || arg[i] == '\0')
 		return (false);
 	else if (arg[i] == '+')
 		i++;
